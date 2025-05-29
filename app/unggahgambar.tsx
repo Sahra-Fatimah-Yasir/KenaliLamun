@@ -82,16 +82,17 @@ export default function Unggahgambar() {
                     <ScrollView>
                       <Text style={{fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>Aturan Pengambilan Foto</Text>
                       <Text style={{fontSize: 16, marginBottom: 10, textAlign:'justify'}}>
-                        1. Pastikan foto yang diambil jelas dan fokus ke objek terlihat jelas 100% {'\n'}
-                        2. Jarak pengambilan gambar berkisaran antara 5 hingga 15 cm dari objek{'\n'}
-                        3. Mangrove yang di ambil hanya bagian  daun atau bunga dari mangrove.{'\n'}
-                        4. 1 Frame foto hanya tidak lebih dari 2/3 objek didalamnya. {'\n'}
-                        5. Hindari pencahayaan gelap atau objek lain yang mengganggu.
-                        6. Pastikan tidak ada refleksi atau bayangan yang menghalangi.
+                        1. Pastikan gambar fokus dan objek jelas terlihat. {'\n'}
+                        2. Gunakan pencahayaan yang cukup dan hindari bayangan.{'\n'}
+                        3. Hindari gangguan latar belakang atau refleksi.{'\n'}
+                        4. Ambil gambar saat lamun tidak bergerak dan stabil. {'\n'}
+                        5. Hindari pencahayaan gelap atau objek lain yang mengganggu. {'\n'}
+                        6. Gunakan sudut yang tepat agar objek terlihat jelas. {'\n'}
+                        7. 7. Saat ini KenaliLamun hanya dapat mengidentifikasi lamun jenis Cymodocea rotundata, Syringodium isoetifolium, dan Thalassia hemprichii.
                       </Text>
                       <TouchableOpacity
                         style={{
-                          backgroundColor: 'mediumseagreen',
+                          backgroundColor: 'lightseagreen',
                           paddingVertical: 12,
                           borderRadius: 10,
                           alignItems: 'center',
@@ -201,7 +202,7 @@ const styles = StyleSheet.create({
   },
   openCamera: {
     textAlign: 'center',
-    backgroundColor: 'mediumseagreen',
+    backgroundColor: 'lightseagreen',
     padding: 20,
     borderRadius: 10,
     width: '60%',

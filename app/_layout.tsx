@@ -11,8 +11,8 @@ export default function RootLayout() {
             <Stack.Screen name="ambilfoto" options={{ headerShown:false }} />
             <Stack.Screen name="hasilidentifikasi" options={{ headerShown:false }} />
             <Stack.Screen name="unggahgambar" options={{ headerShown:false }} />
-            <Stack.Screen name="jenismangrove" options={{ headerShown:false }} />
-            <Stack.Screen name="jenismangrove/[id]" options={{ headerShown:false }} />
+            <Stack.Screen name="jenislamun" options={{ headerShown:false }} />
+            <Stack.Screen name="jenislamun/[id]" options={{ headerShown:false }} />
             <Stack.Screen name="developer" options={{ headerShown:false }} />
           </Stack>
     </SafeAreaProvider>

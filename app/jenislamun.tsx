@@ -14,7 +14,7 @@ import {
   View,
 } from 'react-native';
 
-export default function Jenismangrove() {
+export default function Jenislamun() {
   const navigation = useNavigation();
 
   const { data: mangroves, loading: mangrovesLoading, error: mangroveError } = useFetch(() => fetchGetAllJenisMangrove());
@@ -45,7 +45,7 @@ export default function Jenismangrove() {
                     <Text style={styles.description} numberOfLines={3}>{item.dekripsi}</Text>
                     <Link
                         href={{
-                          pathname: "/jenismangrove/[id]",
+                          pathname: "/jenislamun/[id]",
                           params: { id: item.id.toString() }
                         }}
                       >
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     backgroundColor: 'rgba(255, 255, 255, 0.7)',
     borderRadius: 10,
-    width: '90%',
+    width: '95%',
     marginVertical: 10,
     padding: 10,
     elevation: 3,
@@ -115,13 +115,16 @@ const styles = StyleSheet.create({
   },
   detailButton: {
     color: 'white',
-    fontWeight: '500',
-    marginTop: 4,
-    paddingHorizontal:5,
-    paddingVertical:5,
-    backgroundColor :"seagreen",
-    borderRadius:5,
-    textAlign:"center",
-    fontSize:12,
+    fontWeight: '700',
+    backgroundColor: "lightseagreen",
+    borderRadius: 5,
+    textAlign: 'center',
+    fontSize: 12,  
+    paddingVertical: 6,  
+    paddingHorizontal: 15,  
+    lineHeight: 18,  
+    height: 30,  
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

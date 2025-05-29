@@ -106,7 +106,7 @@ export default function HasilIdentifikasi() {
             {parsedDetections.map((det, i) => (
               <View key={i} style={{ marginBottom: 16 }}>
                 <Text style={styles.label}>
-                  Jenis Mangrove: <Text style={styles.value}>{det.label}</Text>
+                  Jenis Lamun: <Text style={styles.value}>{det.label}</Text>
                 </Text>
                 <Text style={styles.label}>
                   Keyakinan: <Text style={styles.value}>{(det.score * 100).toFixed(2)}%</Text>

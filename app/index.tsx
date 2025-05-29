@@ -16,7 +16,7 @@ export default function Index() {
             </View>
             <View style={styles.containerTitle}>
               <Text style={styles.title}>
-                      Mangrove ID  
+                      KenaliLamun 
                       
               </Text>
               
@@ -25,7 +25,7 @@ export default function Index() {
             <View style={styles.containerMenu}>
               <Link href={"/ambilfoto"} style={styles.button}>Ambil Foto</Link>
               <Link href={"/unggahgambar"} style={styles.button}>Unggah gambar</Link>
-              <Link href={"/jenismangrove"} style={styles.button}>Jenis Mangrove</Link>
+              <Link href={"/jenislamun"} style={styles.button}>Jenis Lamun</Link>
               <Link href={"/developer"}style={styles.button} >Developer</Link>
             </View>
           </View>
@@ -69,12 +69,13 @@ const styles = StyleSheet.create({
   },
   
   title:{
+    fontFamily: 'Raleway_700Bold',
     fontWeight:"bold",
-    fontSize: 24,
+    fontSize: 26,
     opacity:0.8,
     width: "80%",
     textAlign:"center",
-    backgroundColor:"mediumseagreen",
+    backgroundColor:"#177b74",
     paddingVertical:20,
     paddingHorizontal:10,
     color:"white",
@@ -94,7 +95,7 @@ const styles = StyleSheet.create({
     opacity:0.9,
     width: "50%",
     textAlign:"center",
-    backgroundColor:"mediumseagreen",
+    backgroundColor:"lightseagreen",
     padding: 20,
     marginVertical:10,
     color:"white",
