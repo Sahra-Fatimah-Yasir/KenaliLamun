@@ -1,12 +1,12 @@
 export const BACKEND ={
-    BASE_URL: 'http://195.200.15.181:5001',
+    BASE_URL: 'http://195.200.15.181:5005',
     headers:{
         accept: 'application/json',
     }
 }
 
-export const fetchGetAllJenisMangrove = async () => {
-  const endpoint = `${BACKEND.BASE_URL}/mangrove/get-data`;
+export const fetchGetAllJenisLamun = async () => {
+  const endpoint = `${BACKEND.BASE_URL}/lamun/get-data`;
 
   const response = await fetch(endpoint, {
     method: 'GET',
@@ -15,7 +15,7 @@ export const fetchGetAllJenisMangrove = async () => {
 
   if (!response.ok) {
     
-    throw new Error('Failed to fetch mangrove');
+    throw new Error('Failed to fetch ');
   }
 
   const data = await response.json();
@@ -24,7 +24,7 @@ export const fetchGetAllJenisMangrove = async () => {
 };
 
 
-export const uploadMangroveImage = async (fileUri: string, fileName: string) => {
+export const uploadLamunImage = async (fileUri: string, fileName: string) => {
   const formData = new FormData();
   formData.append('file', {
     uri: fileUri,
@@ -32,7 +32,7 @@ export const uploadMangroveImage = async (fileUri: string, fileName: string) => 
     type: 'image/jpeg',
   } as any);
 
-  const response = await fetch(`${BACKEND.BASE_URL}/mangrove/detect`, {
+  const response = await fetch(`${BACKEND.BASE_URL}/lamun/detect`, {
     method: 'POST',
     headers: {
       'Content-Type': 'multipart/form-data',

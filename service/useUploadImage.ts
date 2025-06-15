@@ -1,6 +1,7 @@
+
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useState } from 'react';
-import { uploadMangroveImage } from '../service/api';
+import { uploadLamunImage } from './api';
 
 export const useUploadImage = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ export const useUploadImage = () => {
       const fileUri = manipResult.uri;
       const fileName = fileUri.split('/').pop() ?? 'photo.jpg';
 
-      const result = await uploadMangroveImage(fileUri, fileName);
+      const result = await uploadLamunImage(fileUri, fileName);
 
       return { result, fileUri };
     } catch (err: any) {
