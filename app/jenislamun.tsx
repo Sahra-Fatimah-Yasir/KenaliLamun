@@ -1,4 +1,4 @@
-import { fetchGetAllJenisMangrove } from '@/service/api';
+import { fetchGetAllJenisLamun } from '@/service/api';
 import useFetch from '@/service/useFetch';
 import { Ionicons } from '@expo/vector-icons';
 import { Link, useNavigation } from 'expo-router';
@@ -17,7 +17,7 @@ import {
 export default function Jenislamun() {
   const navigation = useNavigation();
 
-  const { data: mangroves, loading: mangrovesLoading, error: mangroveError } = useFetch(() => fetchGetAllJenisMangrove());
+  const { data: lamun, loading: lamunLoading, error: lamunError } = useFetch(() => fetchGetAllJenisLamun());
 
   return (
     <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
@@ -26,23 +26,23 @@ export default function Jenislamun() {
           <Ionicons name="arrow-back" size={28} color="white" />
         </TouchableOpacity>
 
-        {mangrovesLoading ? (
+        {lamunLoading ? (
           <ActivityIndicator size="large" color="#fff" style={{ marginTop: 80, alignSelf: 'center' }} />
-        ) : mangroveError ? (
-          <Text style={{ color: 'white', textAlign: 'center' }}>Error: {mangroveError?.message}</Text>
+        ) : lamunError ? (
+          <Text style={{ color: 'white', textAlign: 'center' }}>Error: {lamunError?.message}</Text>
         ) : (
           <FlatList
             contentContainerStyle={{ paddingTop: 60, alignItems: 'center', paddingBottom: 100 }}
-            data={mangroves}
+            data={lamun}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => {
-              const imageUrl = `http://195.200.15.181:5001${item.imgSRCDaun}`;
+              const imageUrl = `http://195.200.15.181:5005${item.imgSRCDaun}`;
               return (
                 <View style={styles.card}>
                   <Image source={{ uri: imageUrl }} style={styles.image} resizeMode="cover" />
                   <View style={styles.cardContent}>
                     <Text style={styles.title}>{item.nama}</Text>
-                    <Text style={styles.description} numberOfLines={3}>{item.dekripsi}</Text>
+                    <Text style={styles.description} numberOfLines={3}>{item.morfologi.daun}</Text>
                     <Link
                         href={{
                           pathname: "/jenislamun/[id]",

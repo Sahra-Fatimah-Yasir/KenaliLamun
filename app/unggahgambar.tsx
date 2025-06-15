@@ -88,7 +88,7 @@ export default function Unggahgambar() {
                         4. Ambil gambar saat lamun tidak bergerak dan stabil. {'\n'}
                         5. Hindari pencahayaan gelap atau objek lain yang mengganggu. {'\n'}
                         6. Gunakan sudut yang tepat agar objek terlihat jelas. {'\n'}
-                        7. 7. Saat ini KenaliLamun hanya dapat mengidentifikasi lamun jenis Cymodocea rotundata, Syringodium isoetifolium, dan Thalassia hemprichii.
+                        7. Saat ini KenaliLamun hanya dapat mengidentifikasi lamun jenis Cymodocea rotundata, Syringodium isoetifolium, dan Thalassia hemprichii.
                       </Text>
                       <TouchableOpacity
                         style={{

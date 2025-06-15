@@ -14,7 +14,7 @@ export default function Developer() {
           </TouchableOpacity>
           <View style={styles.authorSection}>
             <Text style={styles.title}>KenaliLamun</Text>
-            <Text style={styles.subtitle}>2025</Text>
+            <Text style={styles.subtitle}></Text>
             <Text style={styles.subtitle}>Developed by:</Text>
             <View style={styles.containerImage}>
               <Image style={styles.fotodeveloper} source={require("../assets/images/developer_seagrass_id.jpg")} />
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
     width: "80%",
     height: "70%",
-    backgroundColor: "rgba(0, 128, 128, 0.7)",  // Menggunakan warna transparan untuk efek modern
+    backgroundColor: "rgba(0, 128, 128, 0.7)",  
     padding: 20,
     color: "white",
     borderRadius: 30,
@@ -52,11 +52,10 @@ const styles = StyleSheet.create({
   title: {
     fontWeight: "bold",
     color: "white",
-    fontSize: 22,
+    fontSize: 30,
     textAlign: "center",
-    marginBottom: 5,
-    textTransform: 'uppercase',  // Menambahkan efek teks kapital untuk kesan lebih kuat
-    letterSpacing: 2,  // Memberikan jarak antar huruf
+    marginBottom: 10,
+    letterSpacing: 4, 
     fontFamily: 'Raleway_700Bold',
   },
   subtitle: {
@@ -72,14 +71,14 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: "center",
     marginTop: 15,
-    fontStyle: 'italic',  // Memberikan gaya huruf miring pada nama developer
+    fontStyle: 'italic', 
   },
   fotodeveloper: {
     width: 130,
     height: 130,
     borderRadius: 65,
     borderWidth: 5,
-    borderColor: 'white', // Memberikan border putih untuk foto
+    borderColor: 'white', 
     marginVertical: 20,
     borderStyle: 'solid',
   },
@@ -92,7 +91,7 @@ const styles = StyleSheet.create({
     top: 40,
     left: 20,
     zIndex: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',  // Memberikan transparansi pada background tombol kembali
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',  
     borderRadius: 25,
     padding: 10,
     elevation: 6,

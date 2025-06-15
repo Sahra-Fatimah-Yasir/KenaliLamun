@@ -61,7 +61,7 @@ export default function HasilIdentifikasi() {
       </TouchableOpacity>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <Text style={styles.title}>Hasil Deteksi Mangrove</Text>
+        <Text style={styles.title}>Hasil Deteksi Lamun</Text>
 
         {!imageUri || !imageSize.width ? (
           <Text style={styles.noDetectionText}>Gambar tidak tersedia</Text>
@@ -103,31 +103,47 @@ export default function HasilIdentifikasi() {
 
         {parsedDetections.length > 0 && (
           <View style={styles.card}>
-            {parsedDetections.map((det, i) => (
+            {parsedDetections.length > 0 && parsedDetections.map((det, i) => (
               <View key={i} style={{ marginBottom: 16 }}>
                 <Text style={styles.label}>
-                  Jenis Lamun: <Text style={styles.value}>{det.label}</Text>
+                  Nama: <Text style={styles.value}>{det.data_tanaman?.nama ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Keyakinan: <Text style={styles.value}>{(det.score * 100).toFixed(2)}%</Text>
+                  Kingdom: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.kingdom ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Catatan: <Text style={styles.value}>{det.data_tanaman?.catatan ?? 'Tidak ditemukan'}</Text>
+                  Division: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.division ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Deskripsi: <Text style={styles.value}>{det.data_tanaman?.dekripsi ?? 'Tidak ditemukan'}</Text>
+                  Class: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.class ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Ekologi: <Text style={styles.value}>{det.data_tanaman?.ekologi ?? 'Tidak ditemukan'}</Text>
+                  Order: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.order ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Manfaat: <Text style={styles.value}>{det.data_tanaman?.manfaat ?? 'Tidak ditemukan'}</Text>
+                  Family: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.family ?? 'Tidak ditemukan'}</Text>
                 </Text>
                 <Text style={styles.label}>
-                  Penyebaran: <Text style={styles.value}>{det.data_tanaman?.penyebaran ?? 'Tidak ditemukan'}</Text>
+                  Genus: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.genus ?? 'Tidak ditemukan'}</Text>
+                </Text>
+                <Text style={styles.label}>
+                  Species: <Text style={styles.value}>{det.data_tanaman?.taksonomi?.species ?? 'Tidak ditemukan'}</Text>
+                </Text>
+                <Text style={styles.label}>
+                  Daun: <Text style={styles.value}>{det.data_tanaman?.morfologi?.daun ?? 'Tidak ditemukan'}</Text>
+                </Text>
+                <Text style={styles.label}>
+                  Batang: <Text style={styles.value}>{det.data_tanaman?.morfologi?.batang ?? 'Tidak ditemukan'}</Text>
+                </Text>
+                <Text style={styles.label}>
+                  Rimpang: <Text style={styles.value}>{det.data_tanaman?.morfologi?.rimpang ?? 'Tidak ditemukan'}</Text>
+                </Text>
+                <Text style={styles.label}>
+                  Habitat: <Text style={styles.value}>{det.data_tanaman?.morfologi?.habitat ?? 'Tidak ditemukan'}</Text>
                 </Text>
               </View>
             ))}
+
           </View>
         )}
       </ScrollView>
@@ -179,7 +195,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.85)',
     borderRadius: 16,
     padding: 16,
-    shadowColor: '#000',
+    shadowColor: 'rgba(0, 0, 0, 0.25)',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,

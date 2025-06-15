@@ -1,19 +1,26 @@
 {
   "expo": {
-    "name": "MangroveID",
-    "slug": "fe-mangrove-id",
+    "name": "KenaliLamun",
+    "slug": "kenalilamun",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/splash-icon-light.png",
-    "scheme": "femangroveid",
+    "icon": "./assets/images/app-icon.png",
+    "scheme": "fe-kenalilamun",
+    "updates": {
+      "fallbackToCacheTimeout": 0,
+      "enabled": true
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "icon": {
-        "light": "./assets/images/ios-light.png",
-        "dark": "./assets/images/ios-dark.png",
-        "tinted": "./assets/images/ios-tinted.png"
+        "light": "./assets/images/app-icon.png",
+        "dark": "./assets/images/app-icon.png",
+        "tinted": "./assets/images/app-icon.png"
       }
     },
     "android": {
@@ -26,12 +33,12 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "package": "com.nursami.femangroveid"
+      "package": "com.sahra.fekenalilamun"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/adaptive-icon.png"
+      "favicon": "./assets/images/app-icon.png"
     },
     "plugins": [
       "expo-router",
@@ -64,14 +71,19 @@
       ],
       "expo-font"
     ],
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/images/splashscreeen_logo.png"
+    },
     "experiments": {
       "typedRoutes": true
     },
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "75d05f45-ca25-42f7-8cd9-e4d3392ade47"
+        "projectId": "0a3b5eb4-32fa-40c5-b635-3d3fa62e86d5"
       }
-    }
+    },
+    "owner": "sahrayasir"
   }
 }
