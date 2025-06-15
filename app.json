@@ -73,7 +73,7 @@
     ],
     "splash": {
       "backgroundColor": "#ffffff",
-      "image": null
+      "image": "./assets/images/splashscreeen_logo.png"
     },
     "experiments": {
       "typedRoutes": true
@@ -81,7 +81,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "1f9128fa-1fdd-4b54-b7dc-b1ec2a632ee4"
+        "projectId": "0a3b5eb4-32fa-40c5-b635-3d3fa62e86d5"
       }
     },
     "owner": "sahrayasir"
