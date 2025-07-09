@@ -14,26 +14,24 @@ import {
 
 export default function HasilIdentifikasi() {
   const navigation = useNavigation();
-  const { detections, imageUri } = useLocalSearchParams<{
+  const { detections, imageUri, enhancedBase64 } = useLocalSearchParams<{
     detections?: string;
     imageUri?: string;
+    enhancedBase64?: string;
   }>();
 
-  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({
-    width: 0,
-    height: 0,
-  });
+  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
 
   const parsedDetections: any[] = detections
     ? (() => {
         try {
           return JSON.parse(detections);
-        } catch {
+        } catch (e) {
+          console.error('❌ Gagal parse detections:', e);
           return [];
         }
       })()
     : [];
-
 
   useEffect(() => {
     if (imageUri) {
@@ -45,17 +43,13 @@ export default function HasilIdentifikasi() {
     }
   }, [imageUri]);
 
-  
   const screenWidth = Dimensions.get('window').width;
-  const scaleFactor = imageSize.width
-    ? screenWidth / imageSize.width
-    : 1;
+  const scaleFactor = imageSize.width ? screenWidth / imageSize.width : 1;
+
+  const enhancedImage = enhancedBase64 ? `data:image/jpeg;base64,${enhancedBase64}` : imageUri;
 
   return (
-    <ImageBackground
-      source={require('../assets/images/background.png')}
-      style={styles.backgroundImage}
-    >
+    <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={28} color="white" />
       </TouchableOpacity>
@@ -63,47 +57,57 @@ export default function HasilIdentifikasi() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Hasil Deteksi Lamun</Text>
 
-        {!imageUri || !imageSize.width ? (
+        {(!imageUri || !imageSize.width) ? (
           <Text style={styles.noDetectionText}>Gambar tidak tersedia</Text>
         ) : (
-          <View style={{ width: '100%', height: imageSize.height * scaleFactor, paddingHorizontal: 2,  }}>
-            <Image
-              source={{ uri: imageUri }}
-              style={{ width: '100%', height: imageSize.height * scaleFactor, borderRadius: 16 }}
-              resizeMode="cover"
-            />
-            {parsedDetections.map((det, i) => {
-              const [x1, y1, x2, y2] = det.box;
-              const boxStyle = {
-                position: 'absolute' as const,
-                left: x1 * scaleFactor,
-                top: y1 * scaleFactor,
-                width: (x2 - x1) * scaleFactor,
-                height: (y2 - y1) * scaleFactor,
-                borderWidth: 2,
-                borderColor: 'red',
-                borderRadius: 4,
-                backgroundColor: 'rgba(255, 0, 0, 0.2)',
-              };
-              return (
-                <View key={i} style={boxStyle}>
-                  <Text style={styles.boxLabel}>
-                    {det.label} ({(det.score * 100).toFixed(1)}%)
-                  </Text>
-                </View>
-              );
-            })}
+          <View style={styles.imageCompareWrapper}>
+            <View style={styles.imageColumn}>
+              <Text style={styles.compareLabel}>Original</Text>
+              <Image
+                source={{ uri: imageUri }}
+                style={[styles.imageDisplay, { height: imageSize.height * scaleFactor }]}
+                resizeMode="cover"
+              />
+            </View>
+            <View style={styles.imageColumn}>
+              <Text style={styles.compareLabel}>Enhanced</Text>
+              <Image
+                source={{ uri: enhancedImage }}
+                style={[styles.imageDisplay, { height: imageSize.height * scaleFactor }]}
+                resizeMode="cover"
+              />
+              {parsedDetections.map((det, i) => {
+                const [x1, y1, x2, y2] = det.box;
+                const boxStyle = {
+                  position: 'absolute' as const,
+                  left: x1 * scaleFactor,
+                  top: y1 * scaleFactor,
+                  width: (x2 - x1) * scaleFactor,
+                  height: (y2 - y1) * scaleFactor,
+                  borderWidth: 2,
+                  borderColor: 'red',
+                  borderRadius: 4,
+                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
+                };
+                return (
+                  <View key={i} style={[boxStyle, { zIndex: 1 }]}>
+                    <Text style={styles.boxLabel}>
+                      {det.label} ({(det.score * 100).toFixed(1)}%)
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
           </View>
         )}
 
-       
         {parsedDetections.length === 0 && (
           <Text style={styles.noDetectionText}>Tidak ada deteksi ditemukan.</Text>
         )}
 
         {parsedDetections.length > 0 && (
           <View style={styles.card}>
-            {parsedDetections.length > 0 && parsedDetections.map((det, i) => (
+            {parsedDetections.map((det, i) => (
               <View key={i} style={{ marginBottom: 16 }}>
                 <Text style={styles.label}>
                   Nama: <Text style={styles.value}>{det.data_tanaman?.nama ?? 'Tidak ditemukan'}</Text>
@@ -143,7 +147,6 @@ export default function HasilIdentifikasi() {
                 </Text>
               </View>
             ))}
-
           </View>
         )}
       </ScrollView>
@@ -226,5 +229,26 @@ const styles = StyleSheet.create({
     top: -18,
     left: 0,
     zIndex: 10,
+  },
+  imageCompareWrapper: {
+    flexDirection: 'row',
+    width: '100%',
+    gap: 6,
+    marginBottom: 16,
+  },
+  imageColumn: {
+    flex: 1,
+    position: 'relative',
+  },
+  compareLabel: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  imageDisplay: {
+    width: '100%',
+    borderRadius: 12,
   },
 });

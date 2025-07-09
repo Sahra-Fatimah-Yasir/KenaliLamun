@@ -26,7 +26,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#3cb371"
+        "backgroundColor": "#000"
       },
       "edgeToEdgeEnabled": true,
       "permissions": [
@@ -45,12 +45,12 @@
       [
         "expo-splash-screen",
         {
-          "backgroundColor": "#3cb371",
+          "backgroundColor": "#000",
           "image": "./assets/images/splash-icon-dark.png",
           "resizeMode": "contain",
           "dark": {
             "image": "./assets/images/splash-icon-light.png",
-            "backgroundColor": "#3cb371"
+            "backgroundColor": "#000"
           },
           "imageWidth": 200
         }
@@ -81,7 +81,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "0a3b5eb4-32fa-40c5-b635-3d3fa62e86d5"
+        "projectId": "435414c3-feef-442b-9980-ce238282af08"
       }
     },
     "owner": "sahrayasir"

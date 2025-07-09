@@ -1,5 +1,6 @@
+
 export const BACKEND ={
-    BASE_URL: 'http://195.200.15.181:5005',
+    BASE_URL: 'http://127.0.0.1:8000',
     headers:{
         accept: 'application/json',
     }
@@ -26,22 +27,25 @@ export const fetchGetAllJenisLamun = async () => {
 
 export const uploadLamunImage = async (fileUri: string, fileName: string) => {
   const formData = new FormData();
-  formData.append('file', {
+
+  const photo: any = {
     uri: fileUri,
     name: fileName,
     type: 'image/jpeg',
-  } as any);
+  };
 
-  const response = await fetch(`${BACKEND.BASE_URL}/lamun/detect`, {
+  formData.append('file', photo);
+
+  const response = await fetch(`${BACKEND.BASE_URL}/lamun/detect?threshold=0.4`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
     body: formData,
   });
 
   const json = await response.json();
   if (!response.ok) throw new Error(json.message || 'Upload gagal');
 
-  return json;
+  return {
+    detections: json.detections,
+    enhancedBase64: json.enhanced_image_base64,
+  };
 };

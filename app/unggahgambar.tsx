@@ -42,21 +42,22 @@ export default function Unggahgambar() {
   };
 
   const handleUpload = async () => {
-    if (!selectedImage) return;
+  if (!selectedImage) return;
 
-    try {
-      const { result, fileUri } = await uploadImage(selectedImage);
-      router.push({
-        pathname: '/hasilidentifikasi',
-        params: {
-          detections: JSON.stringify(result.detections),
-          imageUri: fileUri,
-        },
-      });
-    } catch (err: any) {
-      Alert.alert('Upload Gagal', err.message);
-    }
-  };
+  try {
+    const { result, fileUri } = await uploadImage(selectedImage!);
+    router.push({
+      pathname: '/hasilidentifikasi',
+      params: {
+        detections: JSON.stringify(result.detections),
+        imageUri: fileUri,
+        enhancedImageBase64: result.enhancedBase64,
+      },
+    });
+  } catch (err: any) {
+    Alert.alert('Upload Gagal', err.message);
+  }
+};
 
   return (
     <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>

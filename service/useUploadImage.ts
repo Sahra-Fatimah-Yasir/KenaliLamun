@@ -2,6 +2,8 @@
 import * as ImageManipulator from 'expo-image-manipulator';
 import { useState } from 'react';
 import { uploadLamunImage } from './api';
+import { BACKEND } from '@/service/api';
+
 
 export const useUploadImage = () => {
   const [loading, setLoading] = useState(false);

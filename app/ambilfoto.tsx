@@ -42,21 +42,23 @@ const openCamera = async () => {
   };
 
   const handleUpload = async () => {
-    if (!capturedPhoto) return;
+  if (!capturedPhoto) return;
 
-    try {
-      const { result, fileUri } = await uploadImage(capturedPhoto);
-      router.push({
-        pathname: '/hasilidentifikasi',
-        params: {
-          detections: JSON.stringify(result.detections),
-          imageUri: fileUri,
-        },
-      });
-    } catch (err: any) {
-      Alert.alert('Upload Gagal', err.message);
-    }
-  };
+  try {
+    const { result, fileUri } = await uploadImage(capturedPhoto);
+    router.push({
+      pathname: '/hasilidentifikasi',
+      params: {
+        detections: JSON.stringify(result.detections),
+        imageUri: fileUri,
+        enhancedImageBase64: result.enhancedBase64,
+      },
+    });
+  } catch (err: any) {
+    Alert.alert('Upload Gagal', err.message);
+  }
+};
+  
   return (
      <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
      <Modal
