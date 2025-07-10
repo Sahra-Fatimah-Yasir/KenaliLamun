@@ -6,6 +6,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
+  Dimensions,
   Image,
   ImageBackground,
   Modal,
@@ -13,18 +14,19 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
-
+import Carousel from 'react-native-reanimated-carousel';
 
 export default function Ambilfoto() {
   const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
-  const { loading, error, uploadImage } = useUploadImage();
+  const [enhancedBase64, setEnhancedBase64] = useState<string | null>(null);
+  const { loading, error, uploadImage, enhanceImage } = useUploadImage();
   const router = useRouter();
   const navigation = useNavigation();
   const [showRules, setShowRules] = useState(true);
-  
-const openCamera = async () => {
+
+  const openCamera = async () => {
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
     if (status !== 'granted') {
       Alert.alert('Izin kamera ditolak');
@@ -37,116 +39,117 @@ const openCamera = async () => {
     });
 
     if (!result.canceled) {
-      setCapturedPhoto(result.assets[0].uri);
+      const uri = result.assets[0].uri;
+      setCapturedPhoto(uri);
+
+      try {
+        const { enhancedBase64 } = await enhanceImage(uri); // ambil langsung dari objek
+        setEnhancedBase64(enhancedBase64);
+      } catch (e) {
+        Alert.alert('Gagal enhance gambar');
+      }
     }
   };
 
   const handleUpload = async () => {
-  if (!capturedPhoto) return;
+    if (!capturedPhoto) return;
 
-  try {
-    const { result, fileUri } = await uploadImage(capturedPhoto);
-    router.push({
-      pathname: '/hasilidentifikasi',
-      params: {
-        detections: JSON.stringify(result.detections),
-        imageUri: fileUri,
-        enhancedImageBase64: result.enhancedBase64,
-      },
-    });
-  } catch (err: any) {
-    Alert.alert('Upload Gagal', err.message);
-  }
-};
-  
+    try {
+      const { result, fileUri } = await uploadImage(capturedPhoto);
+      router.push({
+        pathname: '/hasilidentifikasi',
+        params: {
+          detections: JSON.stringify(result.detections),
+          imageUri: fileUri,
+          enhancedBase64: result.enhancedBase64,
+        },
+      });
+    } catch (err: any) {
+      Alert.alert('Upload Gagal', err.message);
+    }
+  };
+
   return (
-     <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
-     <Modal
-          visible={showRules}
-          animationType="slide"
-          transparent={true}
-        >
-          <View style={{
-            flex: 1,
-            backgroundColor: 'rgba(0,0,0,0.5)',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 20,
-          }}>
-            <View style={{
-              backgroundColor: 'white',
-              borderRadius: 20,
-              padding: 20,
-              maxHeight: '80%',
-              width: '90%',
-            }}>
-              <ScrollView>
-                <Text style={{fontWeight: 'bold', fontSize: 20, marginBottom: 10}}>Aturan Pengambilan Foto</Text>
-                <Text style={{fontSize: 16, marginBottom: 10, textAlign:'justify'}}>
-                  1. Pastikan gambar fokus dan objek jelas terlihat. {'\n'}
-                  2. Gunakan pencahayaan yang cukup dan hindari bayangan.{'\n'}
-                  3. Hindari gangguan latar belakang atau refleksi.{'\n'}
-                  4. Ambil gambar saat lamun tidak bergerak dan stabil. {'\n'}
-                  5. Hindari pencahayaan gelap atau objek lain yang mengganggu. {'\n'}
-                  6. Gunakan sudut yang tepat agar objek terlihat jelas. {'\n'}
-                  7. Saat ini KenaliLamun hanya dapat mengidentifikasi lamun jenis Cymodocea rotundata, Syringodium isoetifolium, dan Thalassia hemprichii.
-                </Text>
-                <TouchableOpacity
-                  style={{
-                    backgroundColor: 'lightseagreen',
-                    paddingVertical: 12,
-                    borderRadius: 10,
-                    alignItems: 'center',
-                  }}
-                  onPress={() => setShowRules(false)}
-                >
-                  <Text style={{ color: 'white', fontSize: 16, fontWeight: '600' }}>Mengerti</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
+    <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
+      <Modal visible={showRules} animationType="slide" transparent={true}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <ScrollView>
+              <Text style={styles.modalTitle}>Aturan Pengambilan Foto</Text>
+              <Text style={styles.modalText}>
+                1. Pastikan gambar fokus dan objek jelas terlihat. {'\n'}
+                2. Gunakan pencahayaan yang cukup dan hindari bayangan.{'\n'}
+                3. Hindari gangguan latar belakang atau refleksi.{'\n'}
+                4. Ambil gambar saat lamun tidak bergerak dan stabil. {'\n'}
+                5. Hindari pencahayaan gelap atau objek lain yang mengganggu. {'\n'}
+                6. Gunakan sudut yang tepat agar objek terlihat jelas. {'\n'}
+                7. Saat ini KenaliLamun hanya dapat mengidentifikasi lamun jenis Cymodocea rotundata, Syringodium isoetifolium, dan Thalassia hemprichii.
+              </Text>
+              <TouchableOpacity style={styles.modalButton} onPress={() => setShowRules(false)}>
+                <Text style={styles.modalButtonText}>Mengerti</Text>
+              </TouchableOpacity>
+            </ScrollView>
           </View>
-        </Modal>
+        </View>
+      </Modal>
 
-     
-     <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Ionicons name="arrow-back" size={28} color="white" />
-        </TouchableOpacity>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Ionicons name="arrow-back" size={28} color="white" />
+      </TouchableOpacity>
+
       {capturedPhoto ? (
-  <View style={styles.previewContainer}>
-    <Image source={{ uri: capturedPhoto }} style={styles.previewImage} />
-    <View style={styles.buttonWrapper}>
-      <TouchableOpacity
-        onPress={handleUpload}
-        style={[styles.actionButton, { backgroundColor: '#10b981' }]}
-        disabled={loading}
-      >
-        {loading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.actionButtonText}> Prediksi</Text>
-        )}
-      </TouchableOpacity>
+        <View style={styles.previewContainer}>
+          {enhancedBase64 ? (
+            <Carousel
+              loop
+              width={Dimensions.get('window').width * 0.8}
+              height={220}
+              autoPlay={false}
+              mode="parallax"
+              data={[
+                { label: 'Original', uri: capturedPhoto },
+                { label: 'Enhanced', uri: `data:image/jpeg;base64,${enhancedBase64}` },
+              ]}
+              scrollAnimationDuration={500}
+              renderItem={({ item }: { item: { label: string; uri: string } }) => (
+                <View style={{ alignItems: 'center' }}>
+                  <Text style={styles.compareLabel}>{item.label}</Text>
+                  <Image source={{ uri: item.uri }} style={styles.previewImage} />
+                </View>
+              )}
+            />
+          ) : (
+            <Text style={{ color: 'white', marginBottom: 12 }}>Sedang memproses gambar...</Text>
+          )}
 
-      <TouchableOpacity
-        onPress={() => setCapturedPhoto(null)}
-        style={[styles.actionButton, { backgroundColor: '#6b7280' }]}
-      >
-        <Text style={styles.actionButtonText}>Ambil Ulang</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-) : (
+          <View style={styles.buttonWrapper}>
+            <TouchableOpacity
+              onPress={handleUpload}
+              style={[styles.actionButton, { backgroundColor: '#10b981' }]}
+              disabled={loading}
+            >
+              {loading ? <ActivityIndicator color="#fff" /> : <Text style={styles.actionButtonText}>Prediksi</Text>}
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => {
+                setCapturedPhoto(null);
+                setEnhancedBase64(null);
+              }}
+              style={[styles.actionButton, { backgroundColor: '#6b7280' }]}
+            >
+              <Text style={styles.actionButtonText}>Ambil Ulang</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      ) : (
         <View style={styles.containerOperCamera}>
-          <TouchableOpacity
-            onPress={openCamera}
-            style={styles.openCamera}
-          >
+          <TouchableOpacity onPress={openCamera} style={styles.openCamera}>
             <Text style={styles.textOpenCamera}> Buka Kamera</Text>
           </TouchableOpacity>
         </View>
       )}
     </ImageBackground>
-  
   );
 }
 
@@ -164,21 +167,19 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 6,
   },
-
   previewContainer: {
-  flex: 1,
-  justifyContent: 'center',
-  alignItems: 'center',
-  paddingHorizontal: 20,
-  paddingTop: 80,
-  paddingBottom: 30,
-},
-
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingTop: 80,
+    paddingBottom: 30,
+  },
   previewImage: {
     width: '100%',
-    height: '70%',
+    height: 220,
     borderRadius: 16,
-    marginBottom: 20,
+    marginBottom: 12,
     resizeMode: 'cover',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -186,43 +187,77 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-
   buttonWrapper: {
     width: '100%',
     gap: 12,
   },
-
   actionButton: {
     paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
   },
-
   actionButtonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: '600',
   },
-
-
-
-
-  containerOperCamera :{
-    flex: 1, 
-    justifyContent: 'center', 
-    alignItems: 'center' 
+  containerOperCamera: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  openCamera :{
-      textAlign:'center',
-      backgroundColor: 'lightseagreen',
-      padding: 20,
-      borderRadius: 10,
-      width:'50%'
+  openCamera: {
+    textAlign: 'center',
+    backgroundColor: 'lightseagreen',
+    padding: 20,
+    borderRadius: 10,
+    width: '50%',
   },
-  textOpenCamera :{
-      color: 'white',
-      textAlign:"center",
-      fontSize:18,
-      fontWeight:'500'
-  }
-})
+  textOpenCamera: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+    fontWeight: '500',
+  },
+  compareLabel: {
+    textAlign: 'center',
+    color: 'white',
+    marginBottom: 6,
+    fontWeight: '600',
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+    maxHeight: '80%',
+    width: '90%',
+  },
+  modalTitle: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    marginBottom: 10,
+  },
+  modalText: {
+    fontSize: 16,
+    marginBottom: 10,
+    textAlign: 'justify',
+  },
+  modalButton: {
+    backgroundColor: 'lightseagreen',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+});

@@ -20,7 +20,10 @@ export default function HasilIdentifikasi() {
     enhancedBase64?: string;
   }>();
 
-  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({ width: 0, height: 0 });
+  const [imageSize, setImageSize] = useState<{ width: number; height: number }>({
+    width: 320,
+    height: 240,
+  });
 
   const parsedDetections: any[] = detections
     ? (() => {
@@ -34,11 +37,12 @@ export default function HasilIdentifikasi() {
     : [];
 
   useEffect(() => {
-    if (imageUri) {
+    // Jika imageUri bukan base64, baru ukur dimensi aslinya
+    if (imageUri && !imageUri.startsWith('data:image')) {
       Image.getSize(
         imageUri,
         (width, height) => setImageSize({ width, height }),
-        () => setImageSize({ width: 0, height: 0 })
+        () => setImageSize({ width: 320, height: 240 })
       );
     }
   }, [imageUri]);
@@ -46,7 +50,9 @@ export default function HasilIdentifikasi() {
   const screenWidth = Dimensions.get('window').width;
   const scaleFactor = imageSize.width ? screenWidth / imageSize.width : 1;
 
-  const enhancedImage = enhancedBase64 ? `data:image/jpeg;base64,${enhancedBase64}` : imageUri;
+  const enhancedImage = enhancedBase64
+    ? `data:image/jpeg;base64,${enhancedBase64}`
+    : imageUri;
 
   return (
     <ImageBackground source={require('../assets/images/background.png')} style={styles.backgroundImage}>
@@ -57,47 +63,36 @@ export default function HasilIdentifikasi() {
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>Hasil Deteksi Lamun</Text>
 
-        {(!imageUri || !imageSize.width) ? (
+        {!enhancedImage ? (
           <Text style={styles.noDetectionText}>Gambar tidak tersedia</Text>
         ) : (
-          <View style={styles.imageCompareWrapper}>
-            <View style={styles.imageColumn}>
-              <Text style={styles.compareLabel}>Original</Text>
-              <Image
-                source={{ uri: imageUri }}
-                style={[styles.imageDisplay, { height: imageSize.height * scaleFactor }]}
-                resizeMode="cover"
-              />
-            </View>
-            <View style={styles.imageColumn}>
-              <Text style={styles.compareLabel}>Enhanced</Text>
-              <Image
-                source={{ uri: enhancedImage }}
-                style={[styles.imageDisplay, { height: imageSize.height * scaleFactor }]}
-                resizeMode="cover"
-              />
-              {parsedDetections.map((det, i) => {
-                const [x1, y1, x2, y2] = det.box;
-                const boxStyle = {
-                  position: 'absolute' as const,
-                  left: x1 * scaleFactor,
-                  top: y1 * scaleFactor,
-                  width: (x2 - x1) * scaleFactor,
-                  height: (y2 - y1) * scaleFactor,
-                  borderWidth: 2,
-                  borderColor: 'red',
-                  borderRadius: 4,
-                  backgroundColor: 'rgba(255, 0, 0, 0.2)',
-                };
-                return (
-                  <View key={i} style={[boxStyle, { zIndex: 1 }]}>
-                    <Text style={styles.boxLabel}>
-                      {det.label} ({(det.score * 100).toFixed(1)}%)
-                    </Text>
-                  </View>
-                );
-              })}
-            </View>
+          <View style={styles.imageColumn}>
+            <Image
+              source={{ uri: enhancedImage }}
+              style={[styles.imageDisplay, { height: imageSize.height * scaleFactor }]}
+              resizeMode="cover"
+            />
+            {parsedDetections.map((det, i) => {
+              const [x1, y1, x2, y2] = det.box;
+              const boxStyle = {
+                position: 'absolute' as const,
+                left: Math.max(0, x1 * scaleFactor),
+                top: Math.max(0, y1 * scaleFactor),
+                width: Math.max(1, (x2 - x1) * scaleFactor),
+                height: Math.max(1, (y2 - y1) * scaleFactor),
+                borderWidth: 2,
+                borderColor: 'red',
+                borderRadius: 4,
+                backgroundColor: 'rgba(255, 0, 0, 0.2)',
+              };
+              return (
+                <View key={i} style={[boxStyle, { zIndex: 1 }]}>
+                  <Text style={styles.boxLabel}>
+                    {det.label} ({(det.score * 100).toFixed(1)}%)
+                  </Text>
+                </View>
+              );
+            })}
           </View>
         )}
 
@@ -230,15 +225,10 @@ const styles = StyleSheet.create({
     left: 0,
     zIndex: 10,
   },
-  imageCompareWrapper: {
-    flexDirection: 'row',
-    width: '100%',
-    gap: 6,
-    marginBottom: 16,
-  },
   imageColumn: {
-    flex: 1,
+    width: '100%',
     position: 'relative',
+    marginBottom: 16,
   },
   compareLabel: {
     color: '#fff',
